@@ -10,6 +10,7 @@ const Lightbox = (($) => {
 		maxHeight: 9999,
 		showArrows: true, //display the left / right arrows or not
 		wrapping: true, //if true, gallery loops infinitely
+		swiping: true,
 		type: null, //force the lightbox into image / youtube mode. if null, or not image|youtube|vimeo; detect it
 		alwaysShowClose: false, //always show the close button, even if there is no title
 		loadingMessage: '<div class="ekko-lightbox-loader"><div><div></div><div></div></div></div>', // http://tobiasahlin.com/spinkit/
@@ -146,15 +147,18 @@ const Lightbox = (($) => {
 			$(window).on('resize.ekkoLightbox', () => {
 				this._resize(this._wantedWidth, this._wantedHeight)
 			})
-			this._$lightboxContainer
-			.on('touchstart', () => {
-				this._touchstartX = event.changedTouches[0].screenX;
 
-			})
-			.on('touchend', () => {
-				this._touchendX = event.changedTouches[0].screenX;
-			    this._swipeGesure();
-			})
+			if (this._config.swiping) {
+				this._$lightboxContainer
+				.on('touchstart', () => {
+					this._touchstartX = event.changedTouches[0].screenX;
+
+				})
+				.on('touchend', () => {
+					this._touchendX = event.changedTouches[0].screenX;
+					this._swipeGesure();
+				})
+			}
 		}
 
 		element() {

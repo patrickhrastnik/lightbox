@@ -24,6 +24,7 @@ var Lightbox = (function ($) {
 		maxHeight: 9999,
 		showArrows: true, //display the left / right arrows or not
 		wrapping: true, //if true, gallery loops infinitely
+		swiping: true,
 		type: null, //force the lightbox into image / youtube mode. if null, or not image|youtube|vimeo; detect it
 		alwaysShowClose: false, //always show the close button, even if there is no title
 		loadingMessage: '<div class="ekko-lightbox-loader"><div><div></div><div></div></div></div>', // http://tobiasahlin.com/spinkit/
@@ -48,8 +49,8 @@ var Lightbox = (function ($) {
 			key: 'Default',
 
 			/**
-       Class properties:
-   	 _$element: null -> the <a> element currently being displayed
+   	    Class properties:
+   		 _$element: null -> the <a> element currently being displayed
     _$modal: The bootstrap modal generated
        _$modalDialog: The .modal-dialog
        _$modalContent: The .modal-content
@@ -60,13 +61,13 @@ var Lightbox = (function ($) {
     _$lightboxContainerTwo: Container of the second lightbox element
     _$lightboxBody: First element in the container
     _$modalArrows: The overlayed arrows container
-   	 _$galleryItems: Other <a>'s available for this gallery
+   		 _$galleryItems: Other <a>'s available for this gallery
     _galleryName: Name of the current data('gallery') showing
     _galleryIndex: The current index of the _$galleryItems being shown
-   	 _config: {} the options for the modal
+   		 _config: {} the options for the modal
     _modalId: unique id for the current lightbox
     _padding / _border: CSS properties for the modal container; these are used to calculate the available space for the content
-   	 */
+   		 */
 
 			get: function get() {
 				return Default;
@@ -157,12 +158,15 @@ var Lightbox = (function ($) {
 			$(window).on('resize.ekkoLightbox', function () {
 				_this._resize(_this._wantedWidth, _this._wantedHeight);
 			});
-			this._$lightboxContainer.on('touchstart', function () {
-				_this._touchstartX = event.changedTouches[0].screenX;
-			}).on('touchend', function () {
-				_this._touchendX = event.changedTouches[0].screenX;
-				_this._swipeGesure();
-			});
+
+			if (this._config.swiping) {
+				this._$lightboxContainer.on('touchstart', function () {
+					_this._touchstartX = event.changedTouches[0].screenX;
+				}).on('touchend', function () {
+					_this._touchendX = event.changedTouches[0].screenX;
+					_this._swipeGesure();
+				});
+			}
 		}
 
 		_createClass(Lightbox, [{
